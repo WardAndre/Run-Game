@@ -1,19 +1,22 @@
 window.onload = () => {
     document.getElementById('start-button').onclick = () => {
       startGame();
+      
     };
 
     let canvas = document.getElementById('canvas');
     let ctx = canvas.getContext('2d');
-    // let frames = 0;
+    let myZombies = []
+    let frames = 0;
+    let gameOver = false;
     // let myObstacles = [];
-    
 
+    
+    
     let backImg = new Image();
     backImg.src = 'https://www.codeandweb.com/blog/2018/06/25/how-to-create-sprite-sheets-and-animations-for-easeljs-createjs/stage-1.png';
     
-
-      
+ 
 
     class Player {
         constructor(health, strength, x, y) {
@@ -30,7 +33,7 @@ window.onload = () => {
         receiveDamage(damage){
            this.health = this.health - damage;
         }
-        update (ctx) {
+        update () {
             let playerImg = new Image();
             playerImg.src = 'images/player/Idle__000.png'
             ctx.drawImage(playerImg, this.x, this.y, 70, 100);
@@ -47,8 +50,8 @@ window.onload = () => {
             this.strength = strength;
             this.x = x;
             this.y = y;
-            this.speedX = 1;
-            this.speedY = 0;
+            this.speedX = 3;
+            // this.speedY = 0;
         }
         attack(){
             return this.strength;
@@ -62,8 +65,10 @@ window.onload = () => {
             ctx.drawImage(zombieImg, this.x, this.y, 70, 100);
         }
         newPos() {
-            this.x += this.speedX;
-            this.y += this.speedY;
+            if (frames % 50 === 0){
+                this.x += this.speedX;
+                console.log("oi", frames)
+            }
         }
     }
     
@@ -95,7 +100,13 @@ window.onload = () => {
     let player = new Player(100, 70, 200, 310);
     let zombie = new Zombie(40, 50, 100, 310);
 
-    
+// function createZombies () {
+//     if (frames % 50 === 0) {
+//         zombie.update(ctx);
+//         console.log("ola")
+//     }
+// }
+   
 
     document.onkeydown = function(e) {
         switch (e.keyCode) {
@@ -125,38 +136,57 @@ window.onload = () => {
         player.health -= zombie.strength
         console.log(player.health)
     } 
-    else {
-        console.log("nao")
+    if(player.health <= 0) {
+        gameOver = true;
     }
     }
 
-
-    function gameOver () {
-        if(player.health <= 0) {
-            window.cancelAnimationFrame();
-            console.log("You are dead")
-        }
-    }
+    // function gameOver () {
+    //     if(player.health <= 0) {
+    //         // alert("GAME OVER");
+    //         // document.location.reload();
+    //         // clearInterval(interval);
+    //         // console.log("You are dead", player.health);
+    //         window.cancelAnimationFrame(updateGameFrame);
+    //     }
+    // }
 
 
     function draw(){
         ctx.clearRect(0, 0, 950, 548);
         ctx.drawImage(backImg, 0, 0, 950, 548);
         player.update(ctx);
-        zombie.update(ctx);
+        if (frames % 500 === 0) {
+           myZombies.push(new Zombie(40, 50, -10, 310));
+            console.log("ola")
+        }
+    }
+
+    function moveZombie () {
+        myZombies.forEach(zombie => {
+            zombie.newPos()
+            zombie.update(ctx)
+        })
     }
     
     
 
     function updateGameFrame(){
-        player.newPos();
-        zombie.newPos();
-        draw();
-        // updateObstacles();
-        bite();
-        gameOver();
-        window.requestAnimationFrame(updateGameFrame);
+        if (gameOver) {
+            window.cancelAnimationFrame(updateGameFrame);
+        } else {
+            player.newPos();
+            // zombie.newPos();
+            draw();
+            moveZombie();
+            // updateObstacles();
+            bite();
+            // gameOver();
+            window.requestAnimationFrame(updateGameFrame);
+            frames += 1
+        }
     }
+    
     
     
     function startGame(){ 

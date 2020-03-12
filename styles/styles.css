@@ -2,10 +2,19 @@ html, body {
 	height:100%;
 	width:100%;
 }
+
+h1 {
+	text-align: center;
+	letter-spacing: 5px;
+	text-shadow: 7px 5px red;
+	font-size: 50px;
+	font-weight: 900;
+}
   
 body {
+	background-image: url('/Users/andre/Desktop/Run/images/cbf727a25942f7f113a55634c883adbe-754x394.jpg');
+	background-size: cover;
 	align-content:space-around;
-	background-color:#202830;
 	color:#ffffff;
 	display:grid;
 	justify-content:center;

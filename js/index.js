@@ -4,18 +4,27 @@ window.onload = () => {
       
     };
 
-    document.getElementById('restart-button').onclick = () => {
-        restart();
-        
-      };
-
+    
     let canvas = document.getElementById('canvas');
     let ctx = canvas.getContext('2d');
     let myZombies = []
     let frames = 0;
     let gameOver = false;
     let myObstacles = [];
-    
+    let restartButton;
+
+    restartButton = document.getElementById('restart-button')
+    restartButton.addEventListener("click", restart);
+
+    // document.getElementById('restart-button').onclick = () => {
+    //     restart();
+        
+    //   };
+
+
+
+
+
 // SOUNDS
       let backMusic = new Audio ('sounds/Disco Is Undead.mp3')
       backMusic.volume = 1;
@@ -30,10 +39,12 @@ window.onload = () => {
       gameoverS.volume = 0.5;
     
 
-// BACKGROUND IMAGE
+// IMAGEs
     let backImg = new Image();
     backImg.src = 'https://www.codeandweb.com/blog/2018/06/25/how-to-create-sprite-sheets-and-animations-for-easeljs-createjs/stage-1.png';
 
+    let gameoverImg = new Image();
+    gameoverImg.src = 'images/kisspng-logo-game-over-insert-coin-brand-product-design-5b818dfd432ef1.8788176815352171492752.png'
 
 
 //CLASSES FOR PLAYER, ZOMBIES AND OBSTACLES
@@ -243,17 +254,14 @@ function crashZombie() {
     
     function updateGameFrame(){
         if (player.x < -32) {
-
             player.x = canvas.width;
-        
           } else if (player.x > canvas.width) {
-        
             player.x = -32;
-        
           }
         if (gameOver) {
             backMusic.pause();
             gameoverS.play();
+            ctx.drawImage(gameoverImg, 230, 0, 500, 500);
             window.cancelAnimationFrame(updateGameFrame);
         } else {
             draw();
@@ -273,8 +281,15 @@ function crashZombie() {
     
 
  function restart () {
-    ctx.clearRect(0, 0, 950, 548);
+     if (gameOver) {
+    gameOver = false;
+    player.x = 300
+    player.y = 310
+    myObstacles = [];
+    myZombies = []
+    frames = 0
     startGame();
+     }
  }
     
 

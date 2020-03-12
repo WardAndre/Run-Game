@@ -9,14 +9,33 @@
         <link rel="stylesheet" href="/Users/andre/Desktop/Run/styles/styles.css">
     </head>
     <body>
-        <h1>Run!</h1>
-        <button id="start-button">Start Game</button>
-     
-        <canvas id="canvas" width="950" height="548"></canvas>
+        
+            <h1>RUN!</h1>
+
+        <div class="content">
+        <p>
+            Use keys A, W, D to move character around. But be careful. If you let the zombies get you the game is over, and mind the obstacles.</br>
+            Run, Forrest. Run!
+            <img id="" src="" alt="">
+        </p>
+        
+        <div class="buttons">
+            <div>
+            <button id="start-button">Start Game</button>
+            </div>
+
+            <div>
+            <button id="restart-button">Restart</button>
+            <canvas id="canvas" width="950" height="548"></canvas>
+            </div>
+
+        </div>
+
+
+        </div>
+        
          
-        <!-- include js file after DOM is loaded; 
-            if included earlier, you have to use window.onload = function(){ ... } 
-            approach in your intro.js file -->
+        
         <script src="/Users/andre/Desktop/Run/js/index.js"></script>
     </body>
 </html>

@@ -12,7 +12,7 @@ h1 {
 }
   
 body {
-	background-image: url('images/backImg.jpg');
+	background-image: url('../images/backImg.jpg');
 	background-size: cover;
 	align-content:space-around;
 	color:#ffffff;

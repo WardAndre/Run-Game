@@ -16,31 +16,35 @@ window.onload = () => {
     let gameOver = false;
     let myObstacles = [];
     
+// SOUNDS
+      let backMusic = new Audio ('sounds/Disco Is Undead.mp3')
+      backMusic.volume = 1;
     
+      let jumpS = new Audio ('sounds/BounceYoFrankie.flac')
+      jumpS.volume = 0.7;
+
+      let zombieS = new Audio ('sounds/Zombie Attack Sound.wav')
+      zombieS.volume = 0.1;
+
+      let gameoverS = new Audio ('sounds/game_over_bad_chest.wav')
+      gameoverS.volume = 0.5;
     
+
+// BACKGROUND IMAGE
     let backImg = new Image();
     backImg.src = 'https://www.codeandweb.com/blog/2018/06/25/how-to-create-sprite-sheets-and-animations-for-easeljs-createjs/stage-1.png';
 
 
 
-
+//CLASSES FOR PLAYER, ZOMBIES AND OBSTACLES
 
     class Player {
         constructor(x, y) {
-            // this.health = health;
-            // this.strength = strength;
             this.x = x;
             this.y = y;
             this.speedX = x;
             this.speedY = 0;
         }
-
-        // attack(){
-        //     return this.strength;
-        // };
-        // receiveDamage(damage){
-        //    this.health = this.health - damage;
-        // }
         update () {
             let playerImg = new Image();
             playerImg.src = 'images/player/Idle__000.png'
@@ -63,19 +67,11 @@ window.onload = () => {
     
     class Zombie {
         constructor(x, y) {
-            // this.health = health;
-            // this.strength = strength;
             this.x = x;
             this.y = y;
             this.speedX = 20;
             // this.speedY = 0;
         }
-        // attack(){
-        //     return this.strength;
-        // };
-        // receiveDamage(damage){
-        //    this.health = this.health - damage;
-        // }
         update (ctx) {
             let zombieImg = new Image();
             zombieImg.src = 'images/zombies/male/Idle (1).png';
@@ -108,14 +104,18 @@ window.onload = () => {
         }
     }
 
+// SCORE
+
     function score() {
         var points = Math.floor(frames / 5);
         ctx.font = "18px serif";
         ctx.fillStyle = "black";
         ctx.fillText("Score: " + points, 50, 50);
-      }
+    }
   
   
+   // OBSTACLES FREQUENCE
+
     function updateObstacles() {
         
         for (i = 0; i < myObstacles.length; i++) {
@@ -133,19 +133,20 @@ window.onload = () => {
 
 
 
+//INICIALIZE PLAYER AND ZOMBIE
 
     let player = new Player(300, 310);
     let zombie = new Zombie(100, 310);
     
 
 
-    let jump = false;
-
+    
+//CONTROLS
     document.onkeydown = function(e) {
         switch (e.keyCode) {
           case 87: // up arrow
-        //    jump = true
            player.speedY -= 4;
+           jumpS.play();
             break;
           // case 40: // down arrow
           //   player.speedY += 1;
@@ -162,17 +163,10 @@ window.onload = () => {
       
     document.onkeyup = function(e) {
         player.speedX = 0;
-        // player.speedY = 2;
     };
 
 
-//    function jump() {
-//        player.speedY -= 2;
-//     }
-
-
-
-
+// CRASHES BETWEEN PLAYER, OBSTACLES AND ZOMBIES
 
 function crash() {
     let playerX = player.x;
@@ -185,8 +179,6 @@ function crash() {
         let obstacleXW = myObstacles[i].x + 10;
         let obstacleYH = myObstacles[i].y + 10;
         if (playerXW > obstacleX && playerX < obstacleXW && playerYH > obstacleY && playerY < obstacleYH) {
-            //   myObstacles[i].x = 0;
-            //   myObstacles[i].y = 0;
             player.speedX = 0;
         }
     }
@@ -204,8 +196,6 @@ function crashZombie() {
         let obstacleXW = myObstacles[i].x + 10;
         let obstacleYH = myObstacles[i].y + 10;
         if (zombieXW > obstacleX && zombieX < obstacleXW && zombieYH > obstacleY && zombieY < obstacleYH) {
-            //   myObstacles[i].x = 0;
-            //   myObstacles[i].y = 0;
             myZombies.shift();
         }
     }
@@ -222,8 +212,6 @@ function crashZombie() {
             let zombieXW = myZombies[i].x + 30;
             let zombieYH = myZombies[i].y + 30;
             if (playerXW > zombieX && playerX < zombieXW && playerYH > zombieY && playerY < zombieYH) {
-                //   myObstacles[i].x = 0;
-                //   myObstacles[i].y = 0;
                 gameOver = true;
             }
         }
@@ -236,6 +224,7 @@ function crashZombie() {
         player.update(ctx);
         if (frames % 50 === 0) {
            myZombies.push(new Zombie(0, 310));
+           zombieS.play()
         }
         // ctx.beginPath();
         // ctx.fillStyle = this.c;
@@ -252,12 +241,7 @@ function crashZombie() {
     }
     
     
-
     function updateGameFrame(){
-
-      
-
-
         if (player.x < -32) {
 
             player.x = canvas.width;
@@ -268,9 +252,12 @@ function crashZombie() {
         
           }
         if (gameOver) {
+            backMusic.pause();
+            gameoverS.play();
             window.cancelAnimationFrame(updateGameFrame);
         } else {
             draw();
+            backMusic.play();
             score();
             crash();
             crashZombie()
@@ -284,6 +271,7 @@ function crashZombie() {
          }
     }
     
+
  function restart () {
     ctx.clearRect(0, 0, 950, 548);
     startGame();
@@ -291,6 +279,7 @@ function crashZombie() {
     
 
     function startGame(){ 
+        
         window.requestAnimationFrame(updateGameFrame);
     }
 }
